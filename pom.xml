@@ -10,6 +10,9 @@
   <artifactId>phraseapp</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
+  <name>PhraseApp plugin</name>
+  <description>This plugin is to trigger a build when a PhraseApp translation is updated.</description>
+  <url>http://phraseapp.com</url>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the artifacts that we need -->
   <repositories>

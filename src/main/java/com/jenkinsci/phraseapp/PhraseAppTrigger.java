@@ -1,23 +1,21 @@
 package com.jenkinsci.phraseapp;
-import antlr.ANTLRException;
-
-import com.jenkinsci.phraseapp.Utils.PhraseAppUpdater;
-
 import hudson.Extension;
-import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.AbstractProject;
 import hudson.model.Hudson;
 import hudson.model.Node;
 
 import java.io.File;
-import net.sf.json.JSONObject;
 
 import org.jenkinsci.lib.xtrigger.AbstractTrigger;
 import org.jenkinsci.lib.xtrigger.XTriggerDescriptor;
 import org.jenkinsci.lib.xtrigger.XTriggerException;
 import org.jenkinsci.lib.xtrigger.XTriggerLog;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
+
+import antlr.ANTLRException;
+
+import com.jenkinsci.phraseapp.Utils.PhraseAppUpdater;
 /**
  *
  * @author 02strich
@@ -29,12 +27,15 @@ public class PhraseAppTrigger extends AbstractTrigger {
 	@DataBoundConstructor
     public PhraseAppTrigger(String cronTabSpec) throws ANTLRException {
         super(cronTabSpec);
-        
     }
     
     @Override
     protected File getLogFile() {
-        return new File(job.getRootDir(), "phraseapp-polling.log");
+    	if (job == null) {
+    		return null;
+    	} else {
+    		return new File(job.getRootDir(), "phraseapp-polling.log");
+    	}
     }
 
     @Override
@@ -54,8 +55,7 @@ public class PhraseAppTrigger extends AbstractTrigger {
 
     @Override
     protected boolean checkIfModified(Node node, XTriggerLog xtl) throws XTriggerException {
-        AbstractProject project = (AbstractProject) job;
-        PhraseAppUpdater updater = new PhraseAppUpdater(project.getSomeWorkspace(), xtl);
+        PhraseAppUpdater updater = new PhraseAppUpdater((AbstractProject) job, xtl);
         return updater.performUpdate();
     }
 
